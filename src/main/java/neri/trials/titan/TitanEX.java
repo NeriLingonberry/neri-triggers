@@ -22,13 +22,13 @@ import gg.xp.xivsupport.events.state.XivState;
 public class TitanEX implements FilteredEventHandler {
 
 	// Since we have @CalloutRepo
-	private final ModifiableCallout<AbilityCastStart> valknut = ModifiableCallout.durationBasedCall("Valknut (Out)", "Out");
+	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
 
 	// This comes from FilteredEventHandler. In this case, we want to restrict this set of triggers to a specific
 	// zone (Urth's Fount, in this case, Zone ID 394).
 	@Override
 	public boolean enabled(EventContext context) {
-		return context.getStateInfo().get(XivState.class).zoneIs(394);
+		return context.getStateInfo().get(XivState.class).zoneIs(128);
 	}
 
 	// This is an actual callout. You can specify as many as you want, but you have to follow the usual Java conventions
@@ -41,15 +41,15 @@ public class TitanEX implements FilteredEventHandler {
 	// can be seen in the `enabled` method above, as well as submit new events (in this case, a callout).
 	// The second argument is the type of event to listen for. In this case, we want to know when something starts
 	// casting an ability.
-	public void valknut(EventContext context, AbilityCastStart event) {
-		// Valknut has ID 0xC49. As per usual Java conventions, numbers can be specified as base-10 or base-16. Note
+	public void landslide(EventContext context, AbilityCastStart event) {
+		// landslide has ID 0xC49. As per usual Java conventions, numbers can be specified as base-10 or base-16. Note
 		// that numbers are always signed in Java - so if something is in the 0x80000000 - 0xFFFFFFFF range, you need
 		// to make sure you specify it as a long by putting L at the end of it (e.g. 0xE000000L).
 		if (event.getAbility().getId() == 0x5BB) {
 			// ModifiableCallout.getModified() returns a CalloutEvent with whatever user-specified modifications
 			// applied (e.g. the text can be altered, you can pick TTS/Text/Both, or disable it entirely).
 			// EventContext.accept(Event) - submit the new event to be processed immediately.
-			context.accept(valknut.getModified(event));
+			context.accept(landslide.getModified(event));
 		}
 	}
 }
