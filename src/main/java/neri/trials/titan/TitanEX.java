@@ -11,6 +11,8 @@ import gg.xp.xivsupport.events.actlines.events.TargetabilityUpdate;
 import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
 import gg.xp.xivsupport.events.actlines.events.BuffApplied;
 import gg.xp.xivsupport.events.state.XivState;
+import gg.xp.xivsupport.models.XivCombatant
+import gg.xp.xivsupport.models.XivEntity
 
 /**
  * Example trigger pack for a duty
@@ -104,9 +106,8 @@ public class TitanEX implements FilteredEventHandler {
 			context.accept(upheaval.getModified(event));
 		}
 	}
-	// maybe change 111 from buff
 	@HandleEvents(name = "heart")
-	public void heart(EventContext context, BuffApplied buff) {
+	public void heart(EventContext context, BuffApplied event) {
 		if (event.getBuff().getId() == 0x148) {
 			context.accept(heart.getModified(event));
 		}
@@ -117,16 +118,15 @@ public class TitanEX implements FilteredEventHandler {
 			context.accept(earthenFury.getModified(event));
 		}
 	}
-	//doesn't work past here, fix getTarget
 	@HandleEvents(name = "adds")
 	public void adds(EventContext context, TargetabilityUpdate event) {
-		if (TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 2290) {
+		if (event.getTarget() == 2290) {
 			context.accept(adds.getModified(event));
 		}
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 1504) {
+		if (event.getTarget() == 1504) {
 			context.accept(bombs.getModified(event));
 		}
 	}
