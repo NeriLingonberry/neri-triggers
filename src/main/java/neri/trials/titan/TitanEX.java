@@ -119,13 +119,13 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "adds")
 	public void adds(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget() == 2290) {
+		if (event.getTarget().getId() == 2290) {
 			context.accept(adds.getModified(event));
 		}
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget() == 1504) {
+		if (event.getTarget().getId() == 1504) {
 			context.accept(bombs.getModified(event));
 		}
 	}
