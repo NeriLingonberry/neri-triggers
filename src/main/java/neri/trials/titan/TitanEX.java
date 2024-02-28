@@ -1,11 +1,12 @@
-package neri.trials.titan;
+package neri.TitanEX2;
 
+import gg.xp.reevent.events.BaseEvent;
 import gg.xp.reevent.events.EventContext;
 import gg.xp.reevent.scan.AutoChildEventHandler;
+import gg.xp.reevent.scan.AutoFeed;
 import gg.xp.reevent.scan.FilteredEventHandler;
 import gg.xp.reevent.scan.HandleEvents;
 import gg.xp.xivdata.data.duties.KnownDuty;
-import gg.xp.xivsupport.callouts.CalloutRepo;
 import gg.xp.xivsupport.callouts.ModifiableCallout;
 import gg.xp.xivsupport.events.actlines.events.AbilityCastStart;
 import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
@@ -13,18 +14,18 @@ import gg.xp.xivsupport.events.actlines.events.HeadMarkerEvent;
 import gg.xp.xivsupport.events.actlines.events.actorcontrol.DutyCommenceEvent;
 import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.xivsupport.events.state.combatstate.StatusEffectRepository;
+import gg.xp.xivsupport.events.triggers.seq.SequentialTrigger;
 import gg.xp.xivsupport.events.triggers.util.RepeatSuppressor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-@CalloutRepo(name = "Neri's Titan", duty = KnownDuty.Odin)
-public class Odin extends AutoChildEventHandler implements FilteredEventHandler {
+public class TitanEX extends AutoChildEventHandler implements FilteredEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(Odin.class);
+    private static final Logger log = LoggerFactory.getLogger(TitanEX.class);
 
-    private final ModifiableCallout<AbilityUsedEvent> smallAoe = new ModifiableCallout<>("Tumult", "Small AoE");
+    private final ModifiableCallout<AbilityUsedEvent> verticalFirst = new ModifiableCallout<>("Vertical first", "Cardinals or Corners");
     private final ModifiableCallout<AbilityUsedEvent> horizontalFirst = new ModifiableCallout<>("Horizontal first", "In or out");
     private final ModifiableCallout<AbilityUsedEvent> doubleVertical = new ModifiableCallout<>("Double vertical", "Corners");
     private final ModifiableCallout<AbilityUsedEvent> verticalHorizontal = new ModifiableCallout<>("Vertical then Horizontal", "Cardinals");
@@ -33,7 +34,7 @@ public class Odin extends AutoChildEventHandler implements FilteredEventHandler 
 
     private final ModifiableCallout<AbilityCastStart> akhMorn = ModifiableCallout.durationBasedCall("Akh Morn", "Stack on {event.target}");
     private final ModifiableCallout<AbilityCastStart> tailEnd = ModifiableCallout.durationBasedCall("Tail End", "Buster on {event.target}");
-    private final ModifiableCallout<AbilityCastStart> thunderstorm = ModifiableCallout.durationBasedCall("Thunderstorm", "Spread");
+    private final ModifiableCallout<AbilityCastStart> thunderstorm = ModifiableCallout.durationBasedCall("Thunderstorm", "Sprad");
     private final ModifiableCallout<AbilityCastStart> northernCross = ModifiableCallout.durationBasedCall("Northern Cross", "Raidwide, thin ice"); //TODO: add thin ice icon
     private final ModifiableCallout<AbilityCastStart> akhRhai = ModifiableCallout.durationBasedCall("Akh Rhai: Other", "Move soon");
     private final ModifiableCallout<AbilityCastStart> akhRhaiHealer = ModifiableCallout.durationBasedCall("Akh Rhai: Healer", "Bait AOE far");
@@ -47,14 +48,14 @@ public class Odin extends AutoChildEventHandler implements FilteredEventHandler 
     private final StatusEffectRepository buffs;
     private final RepeatSuppressor refire = new RepeatSuppressor(Duration.ofMillis(200));
 
-    public Odin(XivState state, StatusEffectRepository buffs) {
+    public TitanEX(XivState state, StatusEffectRepository buffs) {
         this.state = state;
         this.buffs = buffs;
     }
 
     @Override
     public boolean enabled(EventContext context) {
-        return state.dutyIs(KnownDuty.Odin);
+        return state.dutyIs(KnownDuty.TitanEX);
     }
 
     private XivState getState() {
@@ -84,8 +85,8 @@ public class Odin extends AutoChildEventHandler implements FilteredEventHandler 
         int id = (int) event.getAbility().getId();
         final ModifiableCallout<AbilityCastStart> call;
         switch (id) {
-            case 0x5BB -> call = smallAoe;
-            case 0x31AA -> call = tailEnd;
+            case 0x5BB -> call = akhMorn;
+            case 0x5BE -> call = tailEnd;
             case 0x31B8 -> {
                 if(refire.check(event))
                     call = thunderstorm;
@@ -99,12 +100,7 @@ public class Odin extends AutoChildEventHandler implements FilteredEventHandler 
                 else
                     call = akhRhai;
             }
-            case 0x31B9 -> {
-                if(refire.check(event))
-                    call = horridRoar;
-                else
-                    return;
-            }
+            case 0x31B9 -> call = horridRoar;
             default -> {
                 return;
             }
@@ -152,8 +148,7 @@ public class Odin extends AutoChildEventHandler implements FilteredEventHandler 
                     call = verticalHorizontal;
                 }
             }
-            case 0x31B0 -> {
-                log.info("imi: casting 0x31B0/12720");
+            case 0x3180 -> {
                 if(stockedSpin == StockedSpin.VERTICAL) {
                     call = doubleVertical;
                 } else {
