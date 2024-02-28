@@ -27,15 +27,15 @@ public class TitanEX implements FilteredEventHandler {
 	// Since we have @CalloutRepo
 	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
 	private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
-	private final ModifiableCallout<AbilityUsedEvent> tumult = ModifiableCallout.durationBasedCall("Tumult", "AoE");
+	private final ModifiableCallout<AbilityUsedEvent> tumult = new ModifiableCallout<>("Tumult", "AoE");
 	private final ModifiableCallout<AbilityCastStart> geocrush = ModifiableCallout.durationBasedCall("Geocrush", "Go to edge");
-	private final ModifiableCallout<AbilityUsedEvent> mountainBuster = ModifiableCallout.durationBasedCall("Mountain Buster", "Tank Buster");
-	private final ModifiableCallout<AbilityUsedEvent> rockThrow = ModifiableCallout.durationBasedCall("Rock Throw", "Jail on {event.target}");
+	private final ModifiableCallout<AbilityUsedEvent> mountainBuster = new ModifiableCallout<>("Mountain Buster", "Tank Buster");
+	private final ModifiableCallout<AbilityUsedEvent> rockThrow = new ModifiableCallout<>("Rock Throw", "Jail on {event.target}");
 	private final ModifiableCallout<AbilityCastStart> upheaval = ModifiableCallout.durationBasedCall("Upheaval", "Big AoE");
-	private final ModifiableCallout<BuffApplied> heart = ModifiableCallout.durationBasedCall("Swap to Heart", "Attack Heart");
-	private final ModifiableCallout<AbilityUsedEvent> earthenFury = ModifiableCallout.durationBasedCall("Earthen Fury", "Big AoE");
-	private final ModifiableCallout<TargetabilityUpdate> adds = ModifiableCallout.durationBasedCall("Adds", "Attack Adds");
-	private final ModifiableCallout<TargetabilityUpdate> bombs = ModifiableCallout.durationBasedCall("Bomb Boulders", "Intercardinals, Dodge Lines");
+	private final ModifiableCallout<BuffApplied> heart = new ModifiableCallout<>("Swap to Heart", "Attack Heart");
+	private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
+	private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
+	private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Intercardinals, Dodge Lines");
 	
 	
 
