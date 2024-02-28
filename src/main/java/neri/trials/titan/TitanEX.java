@@ -55,7 +55,7 @@ public class TitanEX extends AutoChildEventHandler implements FilteredEventHandl
 
     @Override
     public boolean enabled(EventContext context) {
-        return state.dutyIs(KnownDuty.TitanEX);
+        return state.dutyIs(KnownDuty.None);
     }
 
     private XivState getState() {
