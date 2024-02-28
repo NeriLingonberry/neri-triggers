@@ -7,6 +7,9 @@ import gg.xp.xivdata.data.duties.KnownDuty;
 import gg.xp.xivsupport.callouts.CalloutRepo;
 import gg.xp.xivsupport.callouts.ModifiableCallout;
 import gg.xp.xivsupport.events.actlines.events.AbilityCastStart;
+import gg.xp.xivsupport.events.actlines.events.TargetabilityUpdate;
+import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
+import gg.xp.xivsupport.events.actlines.events.BuffApplied;
 import gg.xp.xivsupport.events.state.XivState;
 
 /**
@@ -24,6 +27,17 @@ public class TitanEX implements FilteredEventHandler {
 	// Since we have @CalloutRepo
 	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
 	private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
+	private final ModifiableCallout<AbilityUsedEvent> tumult = ModifiableCallout.durationBasedCall("Tumult", "AoE");
+	private final ModifiableCallout<AbilityCastStart> geocrush = ModifiableCallout.durationBasedCall("Geocrush", "Go to edge");
+	private final ModifiableCallout<AbilityUsedEvent> mountainBuster = ModifiableCallout.durationBasedCall("Mountain Buster", "Tank Buster");
+	private final ModifiableCallout<AbilityUsedEvent> rockThrow = ModifiableCallout.durationBasedCall("Rock Throw", "Jail on {event.target}");
+	private final ModifiableCallout<AbilityCastStart> upheaval = ModifiableCallout.durationBasedCall("Upheaval", "Big AoE");
+	private final ModifiableCallout<BuffApplied> heart = ModifiableCallout.durationBasedCall("Swap to Heart", "Attack Heart");
+	private final ModifiableCallout<AbilityUsedEvent> earthenFury = ModifiableCallout.durationBasedCall("Earthen Fury", "Big AoE");
+	private final ModifiableCallout<TargetabilityUpdate> adds = ModifiableCallout.durationBasedCall("Adds", "Attack Adds");
+	private final ModifiableCallout<TargetabilityUpdate> bombs = ModifiableCallout.durationBasedCall("Bomb Boulders", "Intercardinals, Dodge Lines");
+	
+	
 
 	// This comes from FilteredEventHandler. In this case, we want to restrict this set of triggers to a specific
 	// zone (Urth's Fount, in this case, Zone ID 394).
@@ -58,6 +72,60 @@ public class TitanEX implements FilteredEventHandler {
 	public void groundAoe(EventContext context, AbilityCastStart event) {
 		if (event.getAbility().getId() == 0x5BE) {
 			context.accept(groundAoe.getModified(event));
+		}
+	}
+	@HandleEvents(name = "tumult")
+	public void tumult(EventContext context, AbilityUsedEvent event) {
+		if (event.getAbility().getId() == 0x5C4) {
+			context.accept(tumult.getModified(event));
+		}
+	}
+	@HandleEvents(name = "geocrush")
+	public void geocrush(EventContext context, AbilityCastStart event) {
+		if (event.getAbility().getId() == 0x5C0) {
+			context.accept(geocrush.getModified(event));
+		}
+	}
+	@HandleEvents(name = "mountainBuster")
+	public void mountainBuster(EventContext context, AbilityUsedEvent event) {
+		if (event.getAbility().getId() == 0x5B8) {
+			context.accept(mountainBuster.getModified(event));
+		}
+	}
+	@HandleEvents(name = "rockThrow")
+	public void rockThrow(EventContext context, AbilityUsedEvent event) {
+		if (event.getAbility().getId() == 0x285) {
+			context.accept(rockThrow.getModified(event));
+		}
+	}
+	@HandleEvents(name = "upheaval")
+	public void upheaval(EventContext context, AbilityCastStart event) {
+		if (event.getAbility().getId() == 0x5BA) {
+			context.accept(upheaval.getModified(event));
+		}
+	}
+	@HandleEvents(name = "heart")
+	public void heart(EventContext context, BuffApplied event) {
+		if (event.getBuff().getId() == 148) {
+			context.accept(heart.getModified(event));
+		}
+	}
+	@HandleEvents(name = "earthenFury")
+	public void earthenFury(EventContext context, AbilityUsedEvent event) {
+		if (event.getAbility().getId() == 0x5C1) {
+			context.accept(earthenFury.getModified(event));
+		}
+	}
+	@HandleEvents(name = "adds")
+	public void adds(EventContext context, TargetabilityUpdate event) {
+		if (event.getAbility().getId() == 0x5BE) {
+			context.accept(adds.getModified(event));
+		}
+	}
+	@HandleEvents(name = "bombs")
+	public void bombs(EventContext context, TargetabilityUpdate event) {
+		if (event.getAbility().getId() == 1504) {
+			context.accept(bombs.getModified(event));
 		}
 	}
 }
