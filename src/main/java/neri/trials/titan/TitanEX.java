@@ -23,12 +23,13 @@ public class TitanEX implements FilteredEventHandler {
 
 	// Since we have @CalloutRepo
 	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
+	private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
 
 	// This comes from FilteredEventHandler. In this case, we want to restrict this set of triggers to a specific
 	// zone (Urth's Fount, in this case, Zone ID 394).
 	@Override
 	public boolean enabled(EventContext context) {
-		return context.getStateInfo().get(XivState.class).zoneIs(128);
+		return context.getStateInfo().get(XivState.class).zoneIs(296);
 	}
 
 	// This is an actual callout. You can specify as many as you want, but you have to follow the usual Java conventions
@@ -50,6 +51,13 @@ public class TitanEX implements FilteredEventHandler {
 			// applied (e.g. the text can be altered, you can pick TTS/Text/Both, or disable it entirely).
 			// EventContext.accept(Event) - submit the new event to be processed immediately.
 			context.accept(landslide.getModified(event));
+		}
+	}
+	
+	@HandleEvents(name = "groundAoe")
+	public void groundAoe(EventContext context, AbilityCastStart event) {
+		if (event.getAbility().getId() == 0x5BE) {
+			context.accept(groundAoe.getModified(event));
 		}
 	}
 }
