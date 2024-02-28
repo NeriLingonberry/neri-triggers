@@ -70,7 +70,7 @@ public class TitanEX extends AutoChildEventHandler implements FilteredEventHandl
     private final StatusEffectRepository buffs;
     private final ArenaPos arenaPos = new ArenaPos(0, 0, 5, 5);
 
-    public O8SP2(XivState state, StatusEffectRepository buffs) {
+    public TitanEX(XivState state, StatusEffectRepository buffs) {
         this.state = state;
         this.buffs = buffs;
     }
