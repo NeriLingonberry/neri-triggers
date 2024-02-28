@@ -11,8 +11,8 @@ import gg.xp.xivsupport.events.actlines.events.TargetabilityUpdate;
 import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
 import gg.xp.xivsupport.events.actlines.events.BuffApplied;
 import gg.xp.xivsupport.events.state.XivState;
-import gg.xp.xivsupport.models.XivCombatant
-import gg.xp.xivsupport.models.XivEntity
+import gg.xp.xivsupport.models.XivCombatant;
+import gg.xp.xivsupport.models.XivEntity;
 
 /**
  * Example trigger pack for a duty
