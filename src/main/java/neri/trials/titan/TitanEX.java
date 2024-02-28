@@ -1,4 +1,4 @@
-package neri.TitanEX2;
+package neri.TitanEX;
 
 import gg.xp.reevent.events.BaseEvent;
 import gg.xp.reevent.events.EventContext;
