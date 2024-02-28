@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-@CalloutRepo(name = "Neri's Titan", duty = KnownDuty.TitanEX)
-public class TitanEX extends AutoChildEventHandler implements FilteredEventHandler {
+@CalloutRepo(name = "Neri's Titan", duty = KnownDuty.Odin)
+public class Odin extends AutoChildEventHandler implements FilteredEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(TitanEX.class);
+    private static final Logger log = LoggerFactory.getLogger(Odin.class);
 
     private final ModifiableCallout<AbilityUsedEvent> smallAoe = new ModifiableCallout<>("Tumult", "Small AoE");
     private final ModifiableCallout<AbilityUsedEvent> horizontalFirst = new ModifiableCallout<>("Horizontal first", "In or out");
@@ -47,14 +47,14 @@ public class TitanEX extends AutoChildEventHandler implements FilteredEventHandl
     private final StatusEffectRepository buffs;
     private final RepeatSuppressor refire = new RepeatSuppressor(Duration.ofMillis(200));
 
-    public TitanEX(XivState state, StatusEffectRepository buffs) {
+    public Odin(XivState state, StatusEffectRepository buffs) {
         this.state = state;
         this.buffs = buffs;
     }
 
     @Override
     public boolean enabled(EventContext context) {
-        return state.dutyIs(KnownDuty.TitanEX);
+        return state.dutyIs(KnownDuty.Odin);
     }
 
     private XivState getState() {
