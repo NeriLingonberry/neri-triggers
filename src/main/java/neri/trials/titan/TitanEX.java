@@ -107,8 +107,8 @@ public class TitanEX implements FilteredEventHandler {
 	// maybe change 111 from buff
 	@HandleEvents(name = "heart")
 	public void heart(EventContext context, BuffApplied buff) {
-		if (buff.getBuff().getId() == 148) {
-			context.accept(heart.getModified(buff));
+		if (event.getBuff().getId() == 0x148) {
+			context.accept(heart.getModified(event));
 		}
 	}
 	@HandleEvents(name = "earthenFury")
