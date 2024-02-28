@@ -106,7 +106,7 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "heart")
 	public void heart(EventContext context, BuffApplied event) {
-		if (event.getBuff().getId() == 148) {
+		if (ba.getBuff().getId() == 148) {
 			context.accept(heart.getModified(event));
 		}
 	}
@@ -116,15 +116,16 @@ public class TitanEX implements FilteredEventHandler {
 			context.accept(earthenFury.getModified(event));
 		}
 	}
+	//doesn't work past here, fix getTarget
 	@HandleEvents(name = "adds")
 	public void adds(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget().getId() == 0x5BE) {
+		if (tu.getTarget().getbNpcId() == 2290) {
 			context.accept(adds.getModified(event));
 		}
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget().getId() == 1504) {
+		if (tu.getTarget().getbNpcId() == 1504) {
 			context.accept(bombs.getModified(event));
 		}
 	}
