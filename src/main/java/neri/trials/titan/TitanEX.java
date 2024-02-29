@@ -10,6 +10,7 @@ import gg.xp.xivsupport.events.actlines.events.AbilityCastStart;
 import gg.xp.xivsupport.events.actlines.events.TargetabilityUpdate;
 import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
 import gg.xp.xivsupport.events.actlines.events.BuffApplied;
+import gg.xp.xivsupport.events.actlines.events.BuffRemoved;
 import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.xivsupport.models.XivCombatant;
 import gg.xp.xivsupport.events.triggers.util.RepeatSuppressor;
@@ -36,10 +37,11 @@ public class TitanEX implements FilteredEventHandler {
 	private final ModifiableCallout<AbilityUsedEvent> rockThrow = new ModifiableCallout<>("Rock Throw", "Jail on {event.target}");
 	private final ModifiableCallout<AbilityCastStart> upheaval = ModifiableCallout.durationBasedCall("Upheaval", "Big AoE");
 	private final ModifiableCallout<BuffApplied> heart = new ModifiableCallout<>("Swap to Heart", "Attack Heart");
+	private final ModifiableCallout<BuffRemoved> addsSoon = new ModifiableCallout<>("Adds Warning", "Adds Soon");
 	private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
 	private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
 	private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Intercardinals, Dodge Lines");
-	
+
 	
 
 	// This comes from FilteredEventHandler. In this case, we want to restrict this set of triggers to a specific
@@ -110,8 +112,14 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "heart")
 	public void heart(EventContext context, BuffApplied event) {
-		if (event.getBuff().getId() == 0x148) {
+		if (event.getBuff().getId() == 0x148 && noSpam.check(event)) {
 			context.accept(heart.getModified(event));
+		}
+	}
+		@HandleEvents(name = "addsSoon")
+	public void addsSoon(EventContext context, BuffRemoved event) {
+		if (event.getBuff().getId() == 0x148) {
+			context.accept(addsSoon.getModified(event));
 		}
 	}
 	@HandleEvents(name = "earthenFury")
