@@ -79,7 +79,7 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "tumult")
 	public void tumult(EventContext context, AbilityUsedEvent event) {
-		if (event.getAbility().getId() == 0x5B9 && noSpam.check(event) {
+		if (event.getAbility().getId() == 0x5B9 && noSpam.check(event)) {
 			context.accept(tumult.getModified(event));
 		}
 	}
