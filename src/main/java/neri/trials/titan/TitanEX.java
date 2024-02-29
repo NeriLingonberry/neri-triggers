@@ -46,11 +46,7 @@ public class TitanEX implements FilteredEventHandler {
 		final ModifiableCallout<AbilityCastStart> call;
 		switch (id) {
 			case 0x5BB:
-				if (noSpam.check(event)) {
-					call = landslide;
-				} else {
-					return;
-				}
+				call = landslide;
 				break;
 			case 0x5BE:
 				if (noSpam.check(event)) {
@@ -142,11 +138,7 @@ public class TitanEX implements FilteredEventHandler {
 		final ModifiableCallout<BuffRemoved> call;
 		switch (id) {
 			case 0x148:
-				if (noSpam.check(event)) {
-					call = addsSoon;
-				} else {
-					return;
-				}
+				call = addsSoon;
 				break;
 			default:
 				return;
