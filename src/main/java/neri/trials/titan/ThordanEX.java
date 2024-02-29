@@ -22,8 +22,9 @@ import gg.xp.xivsupport.models.Position;
 import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.reevent.events.BaseEvent;
 import gg.xp.reevent.scan.AutoFeed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import gg.xp.reevent.events.Event;
+import gg.xp.reevent.events.EventContext;
+import gg.xp.reevent.events.SystemEvent;
 
 import java.awt.*;
 import java.time.Duration;
@@ -43,8 +44,6 @@ import java.util.stream.Collectors;
 
 @CalloutRepo(name = "Thordan EX", duty = KnownDuty.None)
 public class ThordanEX implements FilteredEventHandler {
-	
-		private static final Logger log = LoggerFactory.getLogger(Thordan.class);
 
     private final ModifiableCallout<AbilityCastStart> meteorain = ModifiableCallout.durationBasedCall("Meteorain", "Move");
     private final ModifiableCallout<AbilityCastStart> mercy = ModifiableCallout.durationBasedCall("Ascalon's Mercy", "Behind or Between Slashes");
@@ -244,7 +243,6 @@ public class ThordanEX implements FilteredEventHandler {
 	private final SequentialTrigger<BaseEvent> thordan_firstTrio = new SequentialTrigger<>(28_000, BaseEvent.class,
 		e -> e instanceof AbilityUsedEvent aue && aue.getAbility().getId() == 0x1018,
 		(e1, s) -> {
-			log.info("Thordan Trio 1: Start");
 
 			// This new logic should work faster while still preserving pure log compatibility (it will just be delayed)
 			// Comes from:
@@ -260,7 +258,7 @@ public class ThordanEX implements FilteredEventHandler {
 					return id == 5207 || id == 5208 || id == 5209;
 				}).filter(cbt -> cbt.getPos() != null && arenaPos.distanceFromCenter(cbt.getPos()) > 20).toList();
 				if (dashers.size() < 3) {
-					s.refreshCombatants(200);
+					s.refreshCombatantsRequest(200);
 				}
 				else {
 					break;
@@ -270,7 +268,6 @@ public class ThordanEX implements FilteredEventHandler {
 			dashers.stream()
 					.map(arenaPos::forCombatant)
 					.forEach(badSector -> {
-						log.info("Thordan Trio 1: Unsafe spot: {}", badSector);
 						safe.remove(badSector);
 						safe.remove(badSector.opposite());
 					});
@@ -290,9 +287,6 @@ public class ThordanEX implements FilteredEventHandler {
 			}
 			if (safeSpot != null) {
 				s.accept(safeSpot.getModified());
-			}
-			else {
-				log.error("Thordan Trio 1: Bad safespots: {}", safe);
 			}
 		});
 	}
