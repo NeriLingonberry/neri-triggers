@@ -129,4 +129,12 @@ public class TitanEX implements FilteredEventHandler {
 			context.accept(bombs.getModified(event));
 		}
 	}
+	@HandleEvents(name = "bombs")
+	public void bombs(EventContext context, TargetabilityUpdate event) {
+		long targetId = event.getTarget().getId();
+		System.out.println("Target ID: " + targetId); // Add this line for debugging
+		if (targetId == 1504) {
+			context.accept(bombs.getModified(event));
+		}
+	}
 }
