@@ -118,7 +118,7 @@ public class TitanEX implements FilteredEventHandler {
 	}
 		@HandleEvents(name = "addsSoon")
 	public void addsSoon(EventContext context, BuffRemoved event) {
-		if (event.getBuff().getId() == 0x148) {
+		if (event.getBuff().getId() == 0x148 && noSpam.check(event)) {
 			context.accept(addsSoon.getModified(event));
 		}
 	}
@@ -130,13 +130,13 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "adds")
 	public void adds(EventContext context, TargetabilityUpdate event) {
-		if (event.getSource().getbNpcId() == 2290) {
+		if (event.getSource().getbNpcId() == 2290 && noSpam.check(event)) {
 			context.accept(adds.getModified(event));
 		}
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (event.getSource().getbNpcId() == 1504) {
+		if (event.getSource().getbNpcId() == 1504 && noSpam.check(event)) {
 			context.accept(bombs.getModified(event));
 		}
 	}
