@@ -47,6 +47,7 @@ public class TitanEX implements FilteredEventHandler {
 	public boolean enabled(EventContext context) {
 		return context.getStateInfo().get(XivState.class).zoneIs(296);
 	}
+	private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
 
 	// This is an actual callout. You can specify as many as you want, but you have to follow the usual Java conventions
 	// (e.g. they need to have unique names or it won't compile).
@@ -78,7 +79,7 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "tumult")
 	public void tumult(EventContext context, AbilityUsedEvent event) {
-		if (event.getAbility().getId() == 0x5B9) {
+		if (event.getAbility().getId() == 0x5B9 && noSpam.check(event) {
 			context.accept(tumult.getModified(event));
 		}
 	}
@@ -126,7 +127,7 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 1504) {
+		if (event.getTarget().getbNpcId() == 1504) {
 			context.accept(bombs.getModified(event));
 		}
 	}
