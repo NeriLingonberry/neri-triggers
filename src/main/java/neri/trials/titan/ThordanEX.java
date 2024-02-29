@@ -242,58 +242,57 @@ public class ThordanEX implements FilteredEventHandler {
 
 	@AutoFeed
 	private final SequentialTrigger<BaseEvent> thordan_firstTrio = new SequentialTrigger<>(28_000, BaseEvent.class,
-			e -> e instanceof AbilityUsedEvent aue && aue.getAbility().getId() == 0x1018,
-			(e1, s) -> {
-				log.info("Thordan Trio 1: Start");
+		e -> e instanceof AbilityUsedEvent aue && aue.getAbility().getId() == 0x1018,
+		(e1, s) -> {
+			log.info("Thordan Trio 1: Start");
 
-				// This new logic should work faster while still preserving pure log compatibility (it will just be delayed)
-				// Comes from:
-				// Thordan 			12604		5203
-				// Ser Vellguine 12633:3636		5207
-				// Ser Paulecrain 12634:3637	5208
-				// Ser Ignasse 12635:3638		5209
-				List<XivCombatant> dashers;
-				s.waitEvent(TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 5203 && !tu.isTargetable());
-				do {
-					dashers = getState().getCombatants().values().stream().filter(cbt -> {
-						long id = cbt.getbNpcId();
-						return id == 5207 || id == 5208 || id == 5209;
-					}).filter(cbt -> cbt.getPos() != null && arenaPos.distanceFromCenter(cbt.getPos()) > 20).toList();
-					if (dashers.size() < 3) {
-						s.refreshCombatants(200);
-					}
-					else {
-						break;
-					}
-				} while (true);
-				Set<ArenaSector> safe = EnumSet.copyOf(ArenaSector.all);
-				dashers.stream()
-						.map(arenaPos::forCombatant)
-						.forEach(badSector -> {
-							log.info("Thordan Trio 1: Unsafe spot: {}", badSector);
-							safe.remove(badSector);
-							safe.remove(badSector.opposite());
-						});
-
-				ModifiableCallout<?> safeSpot = null;
-				if (safe.contains(ArenaSector.NORTH)) {
-					safeSpot = nsSafe;
-				}
-				else if (safe.contains(ArenaSector.NORTHEAST)) {
-					safeSpot = neSwSafe;
-				}
-				else if (safe.contains(ArenaSector.EAST)) {
-					safeSpot = ewSafe;
-				}
-				else if (safe.contains(ArenaSector.SOUTHEAST)) {
-					safeSpot = seNwSafe;
-				}
-				if (safeSpot != null) {
-					s.accept(safeSpot.getModified());
+			// This new logic should work faster while still preserving pure log compatibility (it will just be delayed)
+			// Comes from:
+			// Thordan 			12604		5203
+			// Ser Vellguine 12633:3636		5207
+			// Ser Paulecrain 12634:3637	5208
+			// Ser Ignasse 12635:3638		5209
+			List<XivCombatant> dashers;
+			s.waitEvent(TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 5203 && !tu.isTargetable());
+			do {
+				dashers = getState().getCombatants().values().stream().filter(cbt -> {
+					long id = cbt.getbNpcId();
+					return id == 5207 || id == 5208 || id == 5209;
+				}).filter(cbt -> cbt.getPos() != null && arenaPos.distanceFromCenter(cbt.getPos()) > 20).toList();
+				if (dashers.size() < 3) {
+					s.refreshCombatants(200);
 				}
 				else {
-					log.error("Thordan Trio 1: Bad safespots: {}", safe);
+					break;
 				}
-			});
+			} while (true);
+			Set<ArenaSector> safe = EnumSet.copyOf(ArenaSector.all);
+			dashers.stream()
+					.map(arenaPos::forCombatant)
+					.forEach(badSector -> {
+						log.info("Thordan Trio 1: Unsafe spot: {}", badSector);
+						safe.remove(badSector);
+						safe.remove(badSector.opposite());
+					});
+
+			ModifiableCallout<?> safeSpot = null;
+			if (safe.contains(ArenaSector.NORTH)) {
+				safeSpot = nsSafe;
+			}
+			else if (safe.contains(ArenaSector.NORTHEAST)) {
+				safeSpot = neSwSafe;
+			}
+			else if (safe.contains(ArenaSector.EAST)) {
+				safeSpot = ewSafe;
+			}
+			else if (safe.contains(ArenaSector.SOUTHEAST)) {
+				safeSpot = seNwSafe;
+			}
+			if (safeSpot != null) {
+				s.accept(safeSpot.getModified());
+			}
+			else {
+				log.error("Thordan Trio 1: Bad safespots: {}", safe);
+			}
+		});
 	}
-}
