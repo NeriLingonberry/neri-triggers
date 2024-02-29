@@ -12,6 +12,7 @@ import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
 import gg.xp.xivsupport.events.actlines.events.BuffApplied;
 import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.xivsupport.models.XivCombatant;
+import gg.xp.xivsupport.events.triggers.easytriggers.conditions.RefireFilter;
 
 /**
  * Example trigger pack for a duty
@@ -121,12 +122,6 @@ public class TitanEX implements FilteredEventHandler {
 	public void adds(EventContext context, TargetabilityUpdate event) {
 		if (event.getTarget().getId() == 2290) {
 			context.accept(adds.getModified(event));
-		}
-	}
-	@HandleEvents(name = "bombs")
-	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget().getId() == 1504) {
-			context.accept(bombs.getModified(event));
 		}
 	}
 	@HandleEvents(name = "bombs")
