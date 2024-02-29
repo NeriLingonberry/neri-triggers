@@ -39,73 +39,136 @@ public class TitanEX implements FilteredEventHandler {
     }
 
     private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
+	
+	@HandleEvents
+	public void abilityCast(EventContext context, AbilityCastStart event) {
+		int id = (int) event.getAbility().getId();
+		final ModifiableCallout<AbilityCastStart> call;
+		switch (id) {
+			case 0x5BB:
+				if (noSpam.check(event)) {
+					call = landslide;
+				} else {
+					return;
+				}
+				break;
+			case 0x5BE:
+				if (noSpam.check(event)) {
+					call = groundAoe;
+				} else {
+					return;
+				}
+				break;
+			case 0x5C0:
+				if (noSpam.check(event)) {
+					call = geocrush;
+				} else {
+					return;
+				}
+				break;
+			case 0x5BA:
+				if (noSpam.check(event)) {
+					call = upheaval;
+				} else {
+					return;
+				}
+				break;
+			default:
+				return;
+		}
+		context.accept(call.getModified(event));
+	}
 
-    @HandleEvents
-    public void handleEvent(EventContext context, Object event) {
-        switch (event.getClass().getSimpleName()) {
-            case "AbilityCastStart":
-                AbilityCastStart castStart = (AbilityCastStart) event;
-                switch (castStart.getAbility().getId()) {
-                    case 0x5BB:
-                        context.accept(landslide.getModified(castStart));
-                        break;
-                    case 0x5BE:
-                        context.accept(groundAoe.getModified(castStart));
-                        break;
-                    case 0x5C0:
-                        context.accept(geocrush.getModified(castStart));
-                        break;
-                    case 0x5BA:
-                        context.accept(upheaval.getModified(castStart));
-                        break;
-                }
-                break;
-            case "AbilityUsedEvent":
-                AbilityUsedEvent usedEvent = (AbilityUsedEvent) event;
-                switch (usedEvent.getAbility().getId()) {
-                    case 0x5B9:
-                        if (noSpam.check(usedEvent)) {
-                            context.accept(tumult.getModified(usedEvent));
-                        }
-                        break;
-                    case 0x5B8:
-                        context.accept(mountainBuster.getModified(usedEvent));
-                        break;
-                    case 0x285:
-                        context.accept(rockThrow.getModified(usedEvent));
-                        break;
-                    case 0x5C1:
-                        context.accept(earthenFury.getModified(usedEvent));
-                        break;
-                }
-                break;
-            case "BuffApplied":
-                BuffApplied buffApplied = (BuffApplied) event;
-                if (buffApplied.getBuff().getId() == 0x148 && noSpam.check(buffApplied)) {
-                    context.accept(heart.getModified(buffApplied));
-                }
-                break;
-            case "BuffRemoved":
-                BuffRemoved buffRemoved = (BuffRemoved) event;
-                if (buffRemoved.getBuff().getId() == 0x148 && noSpam.check(buffRemoved)) {
-                    context.accept(addsSoon.getModified(buffRemoved));
-                }
-                break;
-            case "TargetabilityUpdate":
-                TargetabilityUpdate targetabilityUpdate = (TargetabilityUpdate) event;
-                switch (targetabilityUpdate.getSource().getbNpcId()) {
-                    case 2290:
-                        if (noSpam.check(targetabilityUpdate)) {
-                            context.accept(adds.getModified(targetabilityUpdate));
-                        }
-                        break;
-                    case 1504:
-                        if (noSpam.check(targetabilityUpdate)) {
-                            context.accept(bombs.getModified(targetabilityUpdate));
-                        }
-                        break;
-                }
-                break;
-        }
-    }
+	@HandleEvents
+	public void abilityUsed(EventContext context, AbilityUsedEvent event) {
+		int id = (int) event.getAbility().getId();
+		final ModifiableCallout<AbilityUsedEvent> call;
+		switch (id) {
+			case 0x5B9:
+				if (noSpam.check(event)) {
+					call = tumult;
+				} else {
+					return;
+				}
+				break;
+			case 0x5B8:
+				if (noSpam.check(event)) {
+					call = mountainBuster;
+				} else {
+					return;
+				}
+				break;
+			case 0x285:
+				if (noSpam.check(event)) {
+					call = rockThrow;
+				} else {
+					return;
+				}
+				break;
+			case 0x5C1:
+				if (noSpam.check(event)) {
+					call = earthenFury;
+				} else {
+					return;
+				}
+				break;
+			default:
+				return;
+		}
+		context.accept(call.getModified(event));
+	}
+
+	@HandleEvents
+	public void buffApplied(EventContext context, BuffApplied event) {
+		int id = (int) event.getBuff().getId();
+		final ModifiableCallout<BuffApplied> call;
+		switch (id) {
+			case 0x148:
+				if (noSpam.check(event)) {
+					call = heart;
+				} else {
+					return;
+				}
+				break;
+			default:
+				return;
+		}
+		context.accept(call.getModified(event));
+	}
+
+	@HandleEvents
+	public void buffRemoved(EventContext context, BuffRemoved event) {
+		int id = (int) event.getBuff().getId();
+		final ModifiableCallout<BuffRemoved> call;
+		switch (id) {
+			case 0x148:
+				if (noSpam.check(event)) {
+					call = addsSoon;
+				} else {
+					return;
+				}
+				break;
+			default:
+				return;
+		}
+		context.accept(call.getModified(event));
+	}
+
+	@HandleEvents
+	public void targetabilityUpdate(EventContext context, TargetabilityUpdate event) {
+		int id = (int) event.getSource().getId();
+		final ModifiableCallout<TargetabilityUpdate> call;
+		switch (id) {
+			case 0x148:
+				if (noSpam.check(event)) {
+					call = adds;
+				} else {
+					return;
+				}
+				break;
+			default:
+				return;
+		}
+		context.accept(call.getModified(event));
+	}
 }
