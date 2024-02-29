@@ -124,4 +124,10 @@ public class TitanEX implements FilteredEventHandler {
 			context.accept(adds.getModified(event));
 		}
 	}
+	@HandleEvents(name = "bombs")
+	public void bombs(EventContext context, TargetabilityUpdate event) {
+		if (TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 1504) {
+			context.accept(bombs.getModified(event));
+		}
+	}
 }
