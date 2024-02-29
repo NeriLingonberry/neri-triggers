@@ -156,12 +156,19 @@ public class TitanEX implements FilteredEventHandler {
 
 	@HandleEvents
 	public void targetabilityUpdate(EventContext context, TargetabilityUpdate event) {
-		int id = (int) event.getSource().getId();
+		int id = (int) event.getSource().getbNpcId();
 		final ModifiableCallout<TargetabilityUpdate> call;
 		switch (id) {
-			case 0x148:
+			case 2290:
 				if (noSpam.check(event)) {
 					call = adds;
+				} else {
+					return;
+				}
+				break;
+			case 1504:
+				if (noSpam.check(event)) {
+					call = bombs;
 				} else {
 					return;
 				}
