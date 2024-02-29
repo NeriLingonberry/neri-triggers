@@ -80,7 +80,6 @@ public class TitanEX implements FilteredEventHandler {
 	public void tumult(EventContext context, AbilityUsedEvent event) {
 		if (event.getAbility().getId() == 0x5B9) {
 			context.accept(tumult.getModified(event));
-	public long refireMs = 5_000;
 		}
 	}
 	@HandleEvents(name = "geocrush")
@@ -111,7 +110,6 @@ public class TitanEX implements FilteredEventHandler {
 	public void heart(EventContext context, BuffApplied event) {
 		if (event.getBuff().getId() == 0x148) {
 			context.accept(heart.getModified(event));
-	public long refireMs = 1_000;
 		}
 	}
 	@HandleEvents(name = "earthenFury")
@@ -128,7 +126,7 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget().getId() == 1504) {
+		if (TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 1504) {
 			context.accept(bombs.getModified(event));
 		}
 	}
