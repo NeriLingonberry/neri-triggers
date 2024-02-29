@@ -2,142 +2,104 @@ package neri.TitanEX;
 
 import gg.xp.reevent.events.EventContext;
 import gg.xp.reevent.scan.FilteredEventHandler;
-import gg.xp.reevent.scan.HandleEvents;
 import gg.xp.xivdata.data.duties.KnownDuty;
 import gg.xp.xivsupport.callouts.CalloutRepo;
 import gg.xp.xivsupport.callouts.ModifiableCallout;
-import gg.xp.xivsupport.events.actlines.events.AbilityCastStart;
-import gg.xp.xivsupport.events.actlines.events.TargetabilityUpdate;
-import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
-import gg.xp.xivsupport.events.actlines.events.BuffApplied;
-import gg.xp.xivsupport.events.actlines.events.BuffRemoved;
+import gg.xp.xivsupport.events.actlines.events.*;
 import gg.xp.xivsupport.events.state.XivState;
-import gg.xp.xivsupport.models.XivCombatant;
 import gg.xp.xivsupport.events.triggers.util.RepeatSuppressor;
+
 import java.time.Duration;
 
-/**
- * Example trigger pack for a duty
- */
-// @CalloutRepo indicates that the system should scan for fields defined as ModifiableCallout. The user is presented
-// with a UI to enable/disable them, and change the callout text under the Plugins > Callouts tab.
-// The name chosen here will show in the UI.
 @CalloutRepo(name = "Titan EX", duty = KnownDuty.None)
-// You should not chang the class name once you publish this, as it is used to determine the settings cdKey to store
-// customizations to the callouts.
-// FilteredEventHandler is an optional interface, giving you the 'enabled' option (see below).
 public class TitanEX implements FilteredEventHandler {
 
-	// Since we have @CalloutRepo
-	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
-	private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
-	private final ModifiableCallout<AbilityUsedEvent> tumult = new ModifiableCallout<>("Tumult", "AoE");
-	private final ModifiableCallout<AbilityCastStart> geocrush = ModifiableCallout.durationBasedCall("Geocrush", "Go to edge");
-	private final ModifiableCallout<AbilityUsedEvent> mountainBuster = new ModifiableCallout<>("Mountain Buster", "Tank Buster");
-	private final ModifiableCallout<AbilityUsedEvent> rockThrow = new ModifiableCallout<>("Rock Throw", "Jail on {event.target}");
-	private final ModifiableCallout<AbilityCastStart> upheaval = ModifiableCallout.durationBasedCall("Upheaval", "Big AoE");
-	private final ModifiableCallout<BuffApplied> heart = new ModifiableCallout<>("Swap to Heart", "Attack Heart");
-	private final ModifiableCallout<BuffRemoved> addsSoon = new ModifiableCallout<>("Adds Warning", "Adds Soon");
-	private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
-	private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
-	private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Intercardinals, Dodge Lines");
+    private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
+    private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
+    private final ModifiableCallout<AbilityUsedEvent> tumult = new ModifiableCallout<>("Tumult", "AoE");
+    private final ModifiableCallout<AbilityCastStart> geocrush = ModifiableCallout.durationBasedCall("Geocrush", "Go to edge");
+    private final ModifiableCallout<AbilityUsedEvent> mountainBuster = new ModifiableCallout<>("Mountain Buster", "Tank Buster");
+    private final ModifiableCallout<AbilityUsedEvent> rockThrow = new ModifiableCallout<>("Rock Throw", "Jail on {event.target}");
+    private final ModifiableCallout<AbilityCastStart> upheaval = ModifiableCallout.durationBasedCall("Upheaval", "Big AoE");
+    private final ModifiableCallout<BuffApplied> heart = new ModifiableCallout<>("Swap to Heart", "Attack Heart");
+    private final ModifiableCallout<BuffRemoved> addsSoon = new ModifiableCallout<>("Adds Warning", "Adds Soon");
+    private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
+    private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
+    private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Dodge Boulders");
 
-	
+    @Override
+    public boolean enabled(EventContext context) {
+        return context.getStateInfo().get(XivState.class).zoneIs(296);
+    }
 
-	// This comes from FilteredEventHandler. In this case, we want to restrict this set of triggers to a specific
-	// zone (Urth's Fount, in this case, Zone ID 394).
-	@Override
-	public boolean enabled(EventContext context) {
-		return context.getStateInfo().get(XivState.class).zoneIs(296);
-	}
-	private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
+    private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
 
-	// This is an actual callout. You can specify as many as you want, but you have to follow the usual Java conventions
-	// (e.g. they need to have unique names or it won't compile).
-	// The @HandleEvents annotation is what tells the scanner that this is a method that should be called when we have
-	// an event of the given type to handle.
-	@HandleEvents(name = "Landslide")
-	// The name should not be changed once published, as the is used for the settings keys (just like the class name).
-	// The first argument is always EventContext, which gives you the ability to both query zone/player/etc info (as
-	// can be seen in the `enabled` method above, as well as submit new events (in this case, a callout).
-	// The second argument is the type of event to listen for. In this case, we want to know when something starts
-	// casting an ability.
-	public void landslide(EventContext context, AbilityCastStart event) {
-		// landslide has ID 0xC49. As per usual Java conventions, numbers can be specified as base-10 or base-16. Note
-		// that numbers are always signed in Java - so if something is in the 0x80000000 - 0xFFFFFFFF range, you need
-		// to make sure you specify it as a long by putting L at the end of it (e.g. 0xE000000L).
-		if (event.getAbility().getId() == 0x5BB) {
-			// ModifiableCallout.getModified() returns a CalloutEvent with whatever user-specified modifications
-			// applied (e.g. the text can be altered, you can pick TTS/Text/Both, or disable it entirely).
-			// EventContext.accept(Event) - submit the new event to be processed immediately.
-			context.accept(landslide.getModified(event));
-		}
-	}
-	
-	@HandleEvents(name = "groundAoe")
-	public void groundAoe(EventContext context, AbilityCastStart event) {
-		if (event.getAbility().getId() == 0x5BE) {
-			context.accept(groundAoe.getModified(event));
-		}
-	}
-	@HandleEvents(name = "tumult")
-	public void tumult(EventContext context, AbilityUsedEvent event) {
-		if (event.getAbility().getId() == 0x5B9 && noSpam.check(event)) {
-			context.accept(tumult.getModified(event));
-		}
-	}
-	@HandleEvents(name = "geocrush")
-	public void geocrush(EventContext context, AbilityCastStart event) {
-		if (event.getAbility().getId() == 0x5C0) {
-			context.accept(geocrush.getModified(event));
-		}
-	}
-	@HandleEvents(name = "mountainBuster")
-	public void mountainBuster(EventContext context, AbilityUsedEvent event) {
-		if (event.getAbility().getId() == 0x5B8) {
-			context.accept(mountainBuster.getModified(event));
-		}
-	}
-	@HandleEvents(name = "rockThrow")
-	public void rockThrow(EventContext context, AbilityUsedEvent event) {
-		if (event.getAbility().getId() == 0x285) {
-			context.accept(rockThrow.getModified(event));
-		}
-	}
-	@HandleEvents(name = "upheaval")
-	public void upheaval(EventContext context, AbilityCastStart event) {
-		if (event.getAbility().getId() == 0x5BA) {
-			context.accept(upheaval.getModified(event));
-		}
-	}
-	@HandleEvents(name = "heart")
-	public void heart(EventContext context, BuffApplied event) {
-		if (event.getBuff().getId() == 0x148 && noSpam.check(event)) {
-			context.accept(heart.getModified(event));
-		}
-	}
-		@HandleEvents(name = "addsSoon")
-	public void addsSoon(EventContext context, BuffRemoved event) {
-		if (event.getBuff().getId() == 0x148 && noSpam.check(event)) {
-			context.accept(addsSoon.getModified(event));
-		}
-	}
-	@HandleEvents(name = "earthenFury")
-	public void earthenFury(EventContext context, AbilityUsedEvent event) {
-		if (event.getAbility().getId() == 0x5C1) {
-			context.accept(earthenFury.getModified(event));
-		}
-	}
-	@HandleEvents(name = "adds")
-	public void adds(EventContext context, TargetabilityUpdate event) {
-		if (event.getSource().getbNpcId() == 2290 && noSpam.check(event)) {
-			context.accept(adds.getModified(event));
-		}
-	}
-	@HandleEvents(name = "bombs")
-	public void bombs(EventContext context, TargetabilityUpdate event) {
-		if (event.getSource().getbNpcId() == 1504 && noSpam.check(event)) {
-			context.accept(bombs.getModified(event));
-		}
-	}
+    @Override
+    public void handleEvent(EventContext context, Object event) {
+        switch (event.getClass().getSimpleName()) {
+            case "AbilityCastStart":
+                AbilityCastStart castStart = (AbilityCastStart) event;
+                switch (castStart.getAbility().getId()) {
+                    case 0x5BB:
+                        context.accept(landslide.getModified(castStart));
+                        break;
+                    case 0x5BE:
+                        context.accept(groundAoe.getModified(castStart));
+                        break;
+                    case 0x5C0:
+                        context.accept(geocrush.getModified(castStart));
+                        break;
+                    case 0x5BA:
+                        context.accept(upheaval.getModified(castStart));
+                        break;
+                }
+                break;
+            case "AbilityUsedEvent":
+                AbilityUsedEvent usedEvent = (AbilityUsedEvent) event;
+                switch (usedEvent.getAbility().getId()) {
+                    case 0x5B9:
+                        if (noSpam.check(usedEvent)) {
+                            context.accept(tumult.getModified(usedEvent));
+                        }
+                        break;
+                    case 0x5B8:
+                        context.accept(mountainBuster.getModified(usedEvent));
+                        break;
+                    case 0x285:
+                        context.accept(rockThrow.getModified(usedEvent));
+                        break;
+                    case 0x5C1:
+                        context.accept(earthenFury.getModified(usedEvent));
+                        break;
+                }
+                break;
+            case "BuffApplied":
+                BuffApplied buffApplied = (BuffApplied) event;
+                if (buffApplied.getBuff().getId() == 0x148 && noSpam.check(buffApplied)) {
+                    context.accept(heart.getModified(buffApplied));
+                }
+                break;
+            case "BuffRemoved":
+                BuffRemoved buffRemoved = (BuffRemoved) event;
+                if (buffRemoved.getBuff().getId() == 0x148 && noSpam.check(buffRemoved)) {
+                    context.accept(addsSoon.getModified(buffRemoved));
+                }
+                break;
+            case "TargetabilityUpdate":
+                TargetabilityUpdate targetabilityUpdate = (TargetabilityUpdate) event;
+                switch (targetabilityUpdate.getSource().getbNpcId()) {
+                    case 2290:
+                        if (noSpam.check(targetabilityUpdate)) {
+                            context.accept(adds.getModified(targetabilityUpdate));
+                        }
+                        break;
+                    case 1504:
+                        if (noSpam.check(targetabilityUpdate)) {
+                            context.accept(bombs.getModified(targetabilityUpdate));
+                        }
+                        break;
+                }
+                break;
+        }
+    }
 }
