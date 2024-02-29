@@ -22,10 +22,15 @@ public class ThordanEX implements FilteredEventHandler {
 
     private final ModifiableCallout<AbilityCastStart> meteorain = ModifiableCallout.durationBasedCall("Meteorain", "Move");
     private final ModifiableCallout<AbilityCastStart> mercy = ModifiableCallout.durationBasedCall("Ascalon's Mercy", "Behind or Dodge");
-    private final ModifiableCallout<AbilityCastStart> dragonsEye = ModifiableCallout.durationBasedCall("Dragon's Eye", "Look away");
-    private final ModifiableCallout<AbilityCastStart> dragonsGaze = ModifiableCallout.durationBasedCall("Dragon's Gaze", "Look away2");
+    private final ModifiableCallout<AbilityCastStart> dragonsRage = ModifiableCallout.durationBasedCall("Dragon's Rage", "Stack");
+    private final ModifiableCallout<AbilityCastStart> dragonsGaze = ModifiableCallout.durationBasedCall("Dragon's Gaze", "Look away");
     private final ModifiableCallout<AbilityCastStart> lightningStorm = ModifiableCallout.durationBasedCall("Lightning Storm", "Spread");
     private final ModifiableCallout<AbilityCastStart> quaga = ModifiableCallout.durationBasedCall("Ancient Quaga", "AoE");
+    private final ModifiableCallout<AbilityCastStart> heavenlyHeel = ModifiableCallout.durationBasedCall("Heavenly Heel", "Tank Hit");
+    private final ModifiableCallout<AbilityCastStart> heavensflame = ModifiableCallout.durationBasedCall("Heavensflame", "Spread");
+    private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
+
+
 
 	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
     private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
@@ -66,9 +71,9 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
-			case 0x1488:
+			case 0x148B:
 				if (noSpamShort.check(event)) {
-					call = dragonsEye;
+					call = dragonsRage;
 				} else {
 					return;
 				}
@@ -94,6 +99,20 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
+			case 0x14AC:
+				if (noSpam.check(event)) {
+					call = heavensflame;
+				} else {
+					return;
+				}
+				break;
+			case 0x149C:
+				if (noSpamShort.check(event)) {
+					call = conviction;
+				} else {
+					return;
+				}
+				break;
 			default:
 				return;
 		}
@@ -108,27 +127,6 @@ public class ThordanEX implements FilteredEventHandler {
 			case 0x5B9:
 				if (noSpam.check(event)) {
 					call = tumult;
-				} else {
-					return;
-				}
-				break;
-			case 0x5B8:
-				if (noSpam.check(event)) {
-					call = mountainBuster;
-				} else {
-					return;
-				}
-				break;
-			case 0x285:
-				if (noSpam.check(event)) {
-					call = rockThrow;
-				} else {
-					return;
-				}
-				break;
-			case 0x5C1:
-				if (noSpam.check(event)) {
-					call = earthenFury;
 				} else {
 					return;
 				}
@@ -180,13 +178,6 @@ public class ThordanEX implements FilteredEventHandler {
 		int id = (int) event.getSource().getbNpcId();
 		final ModifiableCallout<TargetabilityUpdate> call;
 		switch (id) {
-			case 2290:
-				if (noSpam.check(event)) {
-					call = adds;
-				} else {
-					return;
-				}
-				break;
 			case 1504:
 				if (noSpam.check(event)) {
 					call = bombs;
