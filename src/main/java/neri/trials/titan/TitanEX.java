@@ -34,7 +34,7 @@ public class TitanEX implements FilteredEventHandler {
 
     private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
 
-    @Override
+    @HandleEvents
     public void handleEvent(EventContext context, Object event) {
         switch (event.getClass().getSimpleName()) {
             case "AbilityCastStart":
