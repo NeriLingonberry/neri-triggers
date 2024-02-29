@@ -257,7 +257,7 @@ public class ThordanEX implements FilteredEventHandler {
 					return id == 5207 || id == 5208 || id == 5209;
 				}).filter(cbt -> cbt.getPos() != null && arenaPos.distanceFromCenter(cbt.getPos()) > 20).toList();
 				if (dashers.size() < 3) {
-					s.refreshCombatantsRequest(200);
+					s.refreshCombatants(200);
 				}
 				else {
 					break;
