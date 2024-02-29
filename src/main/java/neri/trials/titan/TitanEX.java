@@ -13,6 +13,7 @@ import gg.xp.xivsupport.events.actlines.events.BuffApplied;
 import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.xivsupport.models.XivCombatant;
 import gg.xp.xivsupport.events.triggers.util.RepeatSuppressor;
+import java.time.Duration;
 
 /**
  * Example trigger pack for a duty
@@ -121,12 +122,14 @@ public class TitanEX implements FilteredEventHandler {
 	}
 	@HandleEvents(name = "adds")
 	public void adds(EventContext context, TargetabilityUpdate event) {
-		if (event.getTarget().getbNpcId() == 2290) {
+		if (event.getSource().getbNpcId() == 2290) {
 			context.accept(adds.getModified(event));
 		}
 	}
 	@HandleEvents(name = "bombs")
 	public void bombs(EventContext context, TargetabilityUpdate event) {
-		s.waitEvent(() -> event.getTarget().getbNpcId() == 1504, () -> context.accept(bombs.getModified(event)));
+		if (event.getSource().getbNpcId() == 1504) {
+			context.accept(bombs.getModified(event));
+		}
 	}
 }
