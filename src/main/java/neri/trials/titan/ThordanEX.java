@@ -26,8 +26,14 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> dragonsGaze = ModifiableCallout.durationBasedCall("Dragon's Gaze", "Look away2");
     private final ModifiableCallout<AbilityCastStart> lightningStorm = ModifiableCallout.durationBasedCall("Lightning Storm", "Spread");
     private final ModifiableCallout<AbilityCastStart> quaga = ModifiableCallout.durationBasedCall("Ancient Quaga", "AoE");
+
+	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
+    private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
+    private final ModifiableCallout<AbilityUsedEvent> tumult = new ModifiableCallout<>("Tumult", "AoE");
+    private final ModifiableCallout<AbilityCastStart> geocrush = ModifiableCallout.durationBasedCall("Geocrush", "Go to edge");
+    private final ModifiableCallout<AbilityUsedEvent> mountainBuster = new ModifiableCallout<>("Mountain Buster", "Tank Buster");
     private final ModifiableCallout<AbilityUsedEvent> rockThrow = new ModifiableCallout<>("Rock Throw", "Jail on {event.target}");
-	    private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
+	private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
     private final ModifiableCallout<BuffApplied> heart = new ModifiableCallout<>("Swap to Heart", "Attack Heart");
     private final ModifiableCallout<BuffRemoved> addsSoon = new ModifiableCallout<>("Adds Warning", "Adds Soon");
     private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
@@ -47,40 +53,43 @@ public class ThordanEX implements FilteredEventHandler {
 		final ModifiableCallout<AbilityCastStart> call;
 		switch (id) {
 			case 0x1483:
-				call = meteorain;
+				if (noSpamShort.check(event)) {
+					call = meteorain;
+				} else {
+					return;
+				}
 				break;
 			case 0x147F:
-				call = mercy;
+				if (noSpamShort.check(event)) {
+					call = mercy;
+				} else {
+					return;
+				}
 				break;
 			case 0x1488:
-				call = dragonsEye;
+				if (noSpamShort.check(event)) {
+					call = dragonsEye;
+				} else {
+					return;
+				}
 				break;
 			case 0x1489:
-				call = dragonsGaze;
+				if (noSpamShort.check(event)) {
+					call = dragonsGaze;
+				} else {
+					return;
+				}
 				break;
 			case 0x1481:
-				call = lightningStorm;
+				if (noSpamShort.check(event)) {
+					call = lightningStorm;
+				} else {
+					return;
+				}
 				break;
 			case 0x1485:
-				call = quaga;
-				break;
-			case 0x5BE:
-				if (noSpam.check(event)) {
-					call = groundAoe;
-				} else {
-					return;
-				}
-				break;
-			case 0x5C0:
-				if (noSpam.check(event)) {
-					call = geocrush;
-				} else {
-					return;
-				}
-				break;
-			case 0x5BA:
-				if (noSpam.check(event)) {
-					call = upheaval;
+				if (noSpamShort.check(event)) {
+					call = quaga;
 				} else {
 					return;
 				}
