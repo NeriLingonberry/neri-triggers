@@ -47,11 +47,11 @@ public class ThordanEX implements FilteredEventHandler {
 		private static final Logger log = LoggerFactory.getLogger(Thordan.class);
 
     private final ModifiableCallout<AbilityCastStart> meteorain = ModifiableCallout.durationBasedCall("Meteorain", "Move");
-    private final ModifiableCallout<AbilityCastStart> mercy = ModifiableCallout.durationBasedCall("Ascalon's Mercy", "Behind or Dodge");
+    private final ModifiableCallout<AbilityCastStart> mercy = ModifiableCallout.durationBasedCall("Ascalon's Mercy", "Behind or Between Slashes");
     private final ModifiableCallout<AbilityCastStart> dragonsRage = ModifiableCallout.durationBasedCall("Dragon's Rage", "Stack");
     private final ModifiableCallout<AbilityCastStart> dragonsGaze = ModifiableCallout.durationBasedCall("Dragon's Gaze", "Look away");
     private final ModifiableCallout<AbilityCastStart> lightningStorm = ModifiableCallout.durationBasedCall("Lightning Storm", "Spread");
-    private final ModifiableCallout<AbilityCastStart> quaga = ModifiableCallout.durationBasedCall("Ancient Quaga", "AoE");
+    private final ModifiableCallout<AbilityCastStart> quaga = ModifiableCallout.durationBasedCall("Ancient Quaga", "Raidwide");
     private final ModifiableCallout<AbilityCastStart> heavenlyHeel = ModifiableCallout.durationBasedCall("Heavenly Heel", "Tank Hit");
     private final ModifiableCallout<AbilityCastStart> heavensflame = ModifiableCallout.durationBasedCall("Heavensflame", "Spread");
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
