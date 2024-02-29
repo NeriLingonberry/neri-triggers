@@ -39,6 +39,7 @@ public class TitanEX implements FilteredEventHandler {
     }
 
     private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
+    private final RepeatSuppressor noSpamShort = new RepeatSuppressor(Duration.ofMillis(500));
 	
 	@HandleEvents
 	public void abilityCast(EventContext context, AbilityCastStart event) {
@@ -138,7 +139,11 @@ public class TitanEX implements FilteredEventHandler {
 		final ModifiableCallout<BuffRemoved> call;
 		switch (id) {
 			case 0x148:
-				call = addsSoon;
+				if (noSpamShort.check(event)) {
+					call = addsSoon;
+				} else {
+					return;
+				}
 				break;
 			default:
 				return;
