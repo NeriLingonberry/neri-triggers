@@ -23,7 +23,6 @@ import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.reevent.events.BaseEvent;
 import gg.xp.reevent.scan.AutoFeed;
 import gg.xp.reevent.events.Event;
-import gg.xp.reevent.events.EventContext;
 import gg.xp.reevent.events.SystemEvent;
 
 import java.awt.*;
