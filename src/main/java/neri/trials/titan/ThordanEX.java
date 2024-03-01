@@ -41,7 +41,7 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> heavensflame = ModifiableCallout.durationBasedCall("Heavensflame", "Spread");
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
-    private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Go to ");
+    private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
 
 
 	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
@@ -62,7 +62,7 @@ public class ThordanEX implements FilteredEventHandler {
     }
 
     private final RepeatSuppressor noSpam = new RepeatSuppressor(Duration.ofMillis(5000));
-    private final RepeatSuppressor noSpamShort = new RepeatSuppressor(Duration.ofMillis(500));
+    private final RepeatSuppressor noSpamShort = new RepeatSuppressor(Duration.ofMillis(100));
 	
 	@HandleEvents
 	public void abilityCast(EventContext context, AbilityCastStart event) {
@@ -112,7 +112,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x14AC:
-				if (noSpam.check(event)) {
+				if (noSpamShort.check(event)) {
 					call = heavensflame;
 				} else {
 					return;
@@ -133,7 +133,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x14A6:
-				if (noSpamShort.check(event)) {
+				if (noSpam.check(event)) {
 					call = spiralThrust;
 				} else {
 					return;
