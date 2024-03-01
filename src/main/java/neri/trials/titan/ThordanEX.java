@@ -14,6 +14,7 @@ import gg.xp.xivsupport.events.actlines.events.BuffApplied;
 import gg.xp.xivsupport.events.actlines.events.BuffRemoved;
 import gg.xp.xivsupport.events.state.XivState;
 import gg.xp.xivsupport.models.XivCombatant;
+import gg.xp.xivsupport.models.XivPlayerCharacter;
 import gg.xp.xivsupport.events.triggers.util.RepeatSuppressor;
 import gg.xp.xivsupport.events.triggers.seq.SequentialTrigger;
 import gg.xp.xivsupport.events.triggers.seq.SequentialTriggerController;
@@ -26,6 +27,7 @@ import gg.xp.reevent.scan.AutoFeed;
 import gg.xp.reevent.events.Event;
 import gg.xp.reevent.events.SystemEvent;
 import gg.xp.xivsupport.models.CombatantType;
+import gg.xp.xivsupport.events.actlines.events.HeadMarkerEvent;
 
 import java.time.Duration;
 
@@ -43,8 +45,10 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
     private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
-    private final ModifiableCallout<AbilityCastStart> blueBall = ModifiableCallout.durationBasedCall("Blue Ball", "Go far");
     private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Attack Meteors");
+    private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Spread, Drop Ice, then Knockback");
+
+    private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout.<>("Blue Balls", "Go far");
 
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
     private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
@@ -148,16 +152,16 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
-			case 0x14A7:
-				if (event.getTarget().isThePlayer()) {
-					call = blueBall;
+			case 0x14B0:
+				if (noSpamShort.check(event)) {
+					call = meteors;
 				} else {
 					return;
 				}
 				break;
-			case 0x14B0:
+			case 0x14AE:
 				if (noSpamShort.check(event)) {
-					call = meteors;
+					call = frostDebuff;
 				} else {
 					return;
 				}
@@ -174,7 +178,7 @@ public class ThordanEX implements FilteredEventHandler {
 		int id = (int) event.getAbility().getId();
 		final ModifiableCallout<AbilityUsedEvent> call;
 		switch (id) {
-			case 0x149A:
+			case 0x14:
 				if (noSpam.check(event)) {
 					call = goMid;
 				} else {
@@ -239,5 +243,16 @@ public class ThordanEX implements FilteredEventHandler {
 				return;
 		}
 		context.accept(call.getModified(event));
+	}
+	
+	@HandleEvents
+	public void HeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
+		final ModifiableCallout<HeadMarkerEvent> call;
+		if (event.getTarget().isThePlayer()) {
+			call = blueBall;
+		} else {
+			return; // Add this return statement
+		}
+    context.accept(call.getModified(event));
 	}
 }
