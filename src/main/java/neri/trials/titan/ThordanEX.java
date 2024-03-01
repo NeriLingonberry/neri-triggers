@@ -3,7 +3,8 @@ package neri.ThordanEX;
 import gg.xp.reevent.events.EventContext;
 import gg.xp.reevent.scan.FilteredEventHandler;
 import gg.xp.reevent.scan.HandleEvents;
-import gg.xp.xivdata.data.duties.KnownDuty;
+import gg.xp.xivdata.data.*;
+import gg.xp.xivdata.data.duties.*;
 import gg.xp.xivsupport.callouts.CalloutRepo;
 import gg.xp.xivsupport.callouts.ModifiableCallout;
 import gg.xp.xivsupport.events.actlines.events.AbilityCastStart;
@@ -75,7 +76,6 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
     private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Dodge Boulders");
 
-	private final XivState state;
     @Override
     public boolean enabled(EventContext context) {
         return context.getStateInfo().get(XivState.class).zoneIs(448);
