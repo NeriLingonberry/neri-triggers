@@ -135,7 +135,11 @@ public class ThordanEX implements FilteredEventHandler {
 				break;
 			case 0x14A6:
 				if (event.getTarget().getType() == CombatantType.NPC) {
-					call = spiralThrust;
+					if (noSpamShort.check(event)) {
+						call = spiralThrust;
+					} else {
+						return;
+					}
 				} else {
 					return;
 				}
