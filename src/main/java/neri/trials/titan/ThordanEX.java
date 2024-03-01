@@ -48,7 +48,7 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Attack Meteors");
     private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Spread, Drop Ice, then Knockback");
 
-    private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout.<>("Blue Balls", "Go far");
+    private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout<>("Blue Balls", "Go far");
 
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
     private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
