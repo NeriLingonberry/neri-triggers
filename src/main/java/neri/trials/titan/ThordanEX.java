@@ -43,7 +43,11 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
     private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
+    private final ModifiableCallout<AbilityCastStart> blueBall = ModifiableCallout.durationBasedCall("Blue Ball", "Go far");
+    private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Attack Meteors");
+
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
+    private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
 
 	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
     private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
@@ -144,6 +148,20 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
+			case 0x14A7:
+				if (event.getTarget().isThePlayer()) {
+					call = blueBall;
+				} else {
+					return;
+				}
+				break;
+			case 0x14B0:
+				if (noSpamShort.check(event)) {
+					call = meteors;
+				} else {
+					return;
+				}
+				break;
 			default:
 				return;
 		}
@@ -156,9 +174,9 @@ public class ThordanEX implements FilteredEventHandler {
 		int id = (int) event.getAbility().getId();
 		final ModifiableCallout<AbilityUsedEvent> call;
 		switch (id) {
-			case 0x1018:
+			case 0x149A:
 				if (noSpam.check(event)) {
-					call = attackAdds;
+					call = goMid;
 				} else {
 					return;
 				}
