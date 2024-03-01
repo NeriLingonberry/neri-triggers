@@ -25,6 +25,7 @@ import gg.xp.reevent.events.BaseEvent;
 import gg.xp.reevent.scan.AutoFeed;
 import gg.xp.reevent.events.Event;
 import gg.xp.reevent.events.SystemEvent;
+import gg.xp.xivsupport.models.CombatantType;
 
 import java.time.Duration;
 
