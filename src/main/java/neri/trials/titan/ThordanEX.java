@@ -112,7 +112,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x14AB:
-				if(event.getTarget().getType() != CombatantType.NPC)
+				if (event.getTarget().getType() != CombatantType.NPC)
 					return;
 				if (noSpamShort.check(event)) {
 					call = heavensflame;
@@ -121,7 +121,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x149C:
-				if(event.getTarget().getType() != CombatantType.NPC)
+				if (event.getTarget().getType() != CombatantType.NPC)
 					return;
 				if (noSpamShort.check(event)) {
 					call = conviction;
@@ -130,7 +130,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x1490:
-				if(event.getTarget().getType() != CombatantType.NPC)
+				if (event.getTarget().getType() != CombatantType.NPC)
 					return;
 				if (noSpamShort.check(event)) {
 					call = zephirinSpawn;
@@ -139,7 +139,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x14A6:
-				if(event.getTarget().getType() != CombatantType.NPC)
+				if (event.getTarget().getType() != CombatantType.NPC)
 					call = spiralThrust;
 				} else {
 					return;
