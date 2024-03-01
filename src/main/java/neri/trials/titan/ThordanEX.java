@@ -217,3 +217,4 @@ public class ThordanEX implements FilteredEventHandler {
 		}
 		context.accept(call.getModified(event));
 	}
+}
