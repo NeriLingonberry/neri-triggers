@@ -145,6 +145,7 @@ public class ThordanEX implements FilteredEventHandler {
 		context.accept(call.getModified(event));
 	}
 
+
 	@HandleEvents
 	public void abilityUsed(EventContext context, AbilityUsedEvent event) {
 		int id = (int) event.getAbility().getId();
