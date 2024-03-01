@@ -26,66 +26,7 @@ import gg.xp.reevent.scan.AutoFeed;
 import gg.xp.reevent.events.Event;
 import gg.xp.reevent.events.SystemEvent;
 
-import gg.xp.reevent.events.BaseEvent;
-import gg.xp.reevent.events.EventContext;
-import gg.xp.reevent.scan.AutoChildEventHandler;
-import gg.xp.reevent.scan.AutoFeed;
-import gg.xp.reevent.scan.FilteredEventHandler;
-import gg.xp.reevent.scan.HandleEvents;
-import gg.xp.xivdata.data.*;
-import gg.xp.xivdata.data.duties.*;
-import gg.xp.xivsupport.callouts.CalloutRepo;
-import gg.xp.xivsupport.callouts.ModifiableCallout;
-import gg.xp.xivsupport.callouts.RawModifiedCallout;
-import gg.xp.xivsupport.events.actlines.events.AbilityCastStart;
-import gg.xp.xivsupport.events.actlines.events.AbilityUsedEvent;
-import gg.xp.xivsupport.events.actlines.events.BuffApplied;
-import gg.xp.xivsupport.events.actlines.events.BuffRemoved;
-import gg.xp.xivsupport.events.actlines.events.HeadMarkerEvent;
-import gg.xp.xivsupport.events.actlines.events.TargetabilityUpdate;
-import gg.xp.xivsupport.events.actlines.events.TetherEvent;
-import gg.xp.xivsupport.events.actlines.events.ZoneChangeEvent;
-import gg.xp.xivsupport.events.actlines.events.vfx.StatusLoopVfxApplied;
-import gg.xp.xivsupport.events.misc.pulls.PullStartedEvent;
-import gg.xp.xivsupport.events.state.XivState;
-import gg.xp.xivsupport.events.state.combatstate.HeadmarkerOffsetTracker;
-import gg.xp.xivsupport.events.state.combatstate.StatusEffectRepository;
-import gg.xp.xivsupport.events.triggers.marks.AutoMarkRequest;
-import gg.xp.xivsupport.events.triggers.marks.ClearAutoMarkRequest;
-import gg.xp.xivsupport.events.triggers.marks.adv.MarkerSign;
-import gg.xp.xivsupport.events.triggers.marks.adv.MultiSlotAutoMarkHandler;
-import gg.xp.xivsupport.events.triggers.seq.SequentialTrigger;
-import gg.xp.xivsupport.events.triggers.seq.SequentialTriggerController;
-import gg.xp.xivsupport.gui.tables.renderers.RefreshingHpBar;
-import gg.xp.xivsupport.models.ArenaPos;
-import gg.xp.xivsupport.models.ArenaSector;
-import gg.xp.xivsupport.models.Position;
-import gg.xp.xivsupport.models.XivCombatant;
-import gg.xp.xivsupport.models.XivPlayerCharacter;
-import gg.xp.xivsupport.persistence.PersistenceProvider;
-import gg.xp.xivsupport.persistence.settings.BooleanSetting;
-import gg.xp.xivsupport.persistence.settings.JobSortSetting;
-import gg.xp.xivsupport.persistence.settings.MultiSlotAutomarkSetting;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.*;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @CalloutRepo(name = "Thordan EX", duty = KnownDuty.None)
 public class ThordanEX implements FilteredEventHandler {
@@ -101,11 +42,6 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
     private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Go to ");
-	
-	private final ModifiableCallout<?> nsSafe = new ModifiableCallout<>("Trio 1 N/S Safe", "North/South Safe", "North South Safe");
-	private final ModifiableCallout<?> neSwSafe = new ModifiableCallout<>("Trio 1 NE/SW Safe", "Northeast/Southwest Safe", "Northeast Southwest Safe");
-	private final ModifiableCallout<?> ewSafe = new ModifiableCallout<>("Trio 1 E/W Safe", "East/West Safe", "East West Safe");
-	private final ModifiableCallout<?> seNwSafe = new ModifiableCallout<>("Trio 1 SE/NW Safe", "Southeast/Northwest Safe", "Southeast Northwest Safe");
 
 
 
@@ -280,58 +216,4 @@ public class ThordanEX implements FilteredEventHandler {
 				return;
 		}
 		context.accept(call.getModified(event));
-	}
-	private final ArenaPos arenaPos = new ArenaPos(100, 100, 5, 5);
-	private final ArenaPos tightArenaPos = new ArenaPos(100, 100, 3, 3);
-
-	@AutoFeed
-	private final SequentialTrigger<BaseEvent> thordan_firstTrio = new SequentialTrigger<>(28_000, BaseEvent.class,
-		e -> e instanceof AbilityUsedEvent aue && aue.getAbility().getId() == 0x1018,
-		(e1, s) -> {
-
-			// This new logic should work faster while still preserving pure log compatibility (it will just be delayed)
-			// Comes from:
-			// Thordan 			12604		5203
-			// Ser Vellguine 12633:3636		5207
-			// Ser Paulecrain 12634:3637	5208
-			// Ser Ignasse 12635:3638		5209
-			List<XivCombatant> dashers;
-			s.waitEvent(TargetabilityUpdate.class, tu -> tu.getTarget().getbNpcId() == 5203 && !tu.isTargetable());
-			do {
-				dashers = getState().getCombatants().values().stream().filter(cbt -> {
-					long id = cbt.getbNpcId();
-					return id == 5207 || id == 5208 || id == 5209;
-				}).filter(cbt -> cbt.getPos() != null && arenaPos.distanceFromCenter(cbt.getPos()) > 20).toList();
-				if (dashers.size() < 3) {
-					s.refreshCombatants(200);
-				}
-				else {
-					break;
-				}
-			} while (true);
-			Set<ArenaSector> safe = EnumSet.copyOf(ArenaSector.all);
-			dashers.stream()
-					.map(arenaPos::forCombatant)
-					.forEach(badSector -> {
-						safe.remove(badSector);
-						safe.remove(badSector.opposite());
-					});
-
-			ModifiableCallout<?> safeSpot = null;
-			if (safe.contains(ArenaSector.NORTH)) {
-				safeSpot = nsSafe;
-			}
-			else if (safe.contains(ArenaSector.NORTHEAST)) {
-				safeSpot = neSwSafe;
-			}
-			else if (safe.contains(ArenaSector.EAST)) {
-				safeSpot = ewSafe;
-			}
-			else if (safe.contains(ArenaSector.SOUTHEAST)) {
-				safeSpot = seNwSafe;
-			}
-			if (safeSpot != null) {
-				s.accept(safeSpot.getModified());
-			}
-		});
 	}
