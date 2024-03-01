@@ -75,6 +75,7 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
     private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Dodge Boulders");
 
+	private final XivState state;
     @Override
     public boolean enabled(EventContext context) {
         return context.getStateInfo().get(XivState.class).zoneIs(448);
