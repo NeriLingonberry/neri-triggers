@@ -112,27 +112,21 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x14AB:
-				if (event.getTarget().getType() != CombatantType.NPC)
-					return;
-				else if (noSpamShort.check(event)) {
+				if (noSpamShort.check(event)) {
 					call = heavensflame;
 				} else {
 					return;
 				}
 				break;
 			case 0x149C:
-				if (event.getTarget().getType() != CombatantType.NPC)
-					return;
-				else if (noSpamShort.check(event)) {
+				if (event.getTarget().getType() = CombatantType.NPC)) {
 					call = conviction;
 				} else {
 					return;
 				}
 				break;
 			case 0x1490:
-				if (event.getTarget().getType() != CombatantType.NPC)
-					return;
-				else if (noSpamShort.check(event)) {
+				if (event.getTarget().getType() = CombatantType.NPC)) {
 					call = zephirinSpawn;
 				} else {
 					return;
