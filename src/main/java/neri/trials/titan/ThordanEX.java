@@ -151,6 +151,13 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
+			case 0x1491:
+				if (event.getTarget().getType() == CombatantType.NPC) {
+					call = zephirinSpawn;
+				} else {
+					return;
+				}
+				break;
 			case 0x14A6:
 				if (event.getTarget().getType() == CombatantType.NPC) {
 					if (noSpamShort.check(event)) {
@@ -296,9 +303,18 @@ public class ThordanEX implements FilteredEventHandler {
 		final ModifiableCallout<HeadMarkerEvent> call;
 		if (event.getTarget().isThePlayer()) {
 			if (event.getMarkerId() == 0xE) {
-				call = blueBall;
+				if (noSpam.check(event)) {
+					call = blueBall;
+				} else {
+					return;
+				}
 			} else if (event.getMarkerId() == 0x1D) {
-				call = spread2;
+				if (noSpam.check(event)) {
+					call = blueBall;
+				} else {
+					return;
+				}
+				call = blueBall;
 			} else if (event.getMarkerId() == 0xB) {
 				call = comet;
 			} else if (event.getMarkerId() == 0x10) {
@@ -317,7 +333,11 @@ public class ThordanEX implements FilteredEventHandler {
 		final ModifiableCallout<TetherEvent> call;
 		if (event.getTarget().isThePlayer()) {
 			if (event.getId() == 0x5) {
-				call = tether;
+				if (noSpam.check(event)) {
+					call = tether;
+				} else {
+					return;
+				}
 			} else {
 				return;
 			}
