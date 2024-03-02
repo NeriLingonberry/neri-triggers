@@ -249,16 +249,10 @@ public class ThordanEX implements FilteredEventHandler {
 	}
 	
 	@HandleEvents
-	public void HandleHeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
+	public void handleHeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
 		final ModifiableCallout<HeadMarkerEvent> call;
 		if (event.getTarget().isThePlayer()) {
-			if (event.getMarkerId() == 0xE) {
-				if (noSpam.check(event)) {
-					call = blueBall;
-				} else {
-					return;
-				}
-			} else if (event.getMarkerId() == 0x1D) {
+			if (event.getMarkerId() == 0xE || event.getMarkerId() == 0x1D) {
 				if (noSpam.check(event)) {
 					call = blueBall;
 				} else {
@@ -278,15 +272,11 @@ public class ThordanEX implements FilteredEventHandler {
 	}
 	
 	@HandleEvents
-	public void HandleTetherEvent(EventContext context, TetherEvent event) {
+	public void handleTetherEvent(EventContext context, TetherEvent event) {
 		final ModifiableCallout<TetherEvent> call;
-		if (event.getTarget().isThePlayer()) {
-			if (event.getId() == 0x5) {
-				if (noSpam.check(event)) {
-					call = tether;
-				} else {
-					return;
-				}
+		if (event.getTarget().isThePlayer() && event.getId() == 0x5) {
+			if (noSpam.check(event)) {
+				call = tether;
 			} else {
 				return;
 			}
