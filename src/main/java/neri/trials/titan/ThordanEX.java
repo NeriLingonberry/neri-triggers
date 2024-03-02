@@ -241,9 +241,9 @@ public class ThordanEX implements FilteredEventHandler {
 		int id = (int) event.getSource().getbNpcId();
 		final ModifiableCallout<TargetabilityUpdate> call;
 		switch (id) {
-			case 1504:
+			case 5205:
 				if (noSpam.check(event)) {
-					call = bombs;
+					call = adds;
 				} else {
 					return;
 				}
