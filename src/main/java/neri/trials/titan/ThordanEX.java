@@ -45,7 +45,7 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
     private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
-    private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Attack Meteors");
+    private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Knockback");
     private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Drop Ice out");
     private final ModifiableCallout<AbilityCastStart> knockback = ModifiableCallout.durationBasedCall("Knockback", "Knockback soon");
     private final ModifiableCallout<AbilityCastStart> growingAoe = ModifiableCallout.durationBasedCall("Heavy Impact", "Dodge growing aoe");
