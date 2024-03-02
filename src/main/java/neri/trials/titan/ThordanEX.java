@@ -52,9 +52,9 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> growingAoe = ModifiableCallout.durationBasedCall("Heavy Impact", "Dodge growing aoe");
     private final ModifiableCallout<AbilityCastStart> intercept = ModifiableCallout.durationBasedCall("Healer Mark 2", "Intercept Healer Mark");
 
-    private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout<>("Blue Balls", "Go far, don't stack");
+    private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout<>("Blue Balls", "Go far");
     private final ModifiableCallout<HeadMarkerEvent> spread2 = new ModifiableCallout<>("Spread 2", "Spread");
-    private final ModifiableCallout<HeadMarkerEvent> comet = new ModifiableCallout<>("Comet", "Comet on you");
+    private final ModifiableCallout<HeadMarkerEvent> comet = new ModifiableCallout<>("Comet", "Comet on YOU");
     private final ModifiableCallout<HeadMarkerEvent> healerHM = new ModifiableCallout<>("Healer Mark", "Healer Mark on YOU");
 	
     private final ModifiableCallout<TetherEvent> tether = new ModifiableCallout<>("Tether", "Tether, Spread");
