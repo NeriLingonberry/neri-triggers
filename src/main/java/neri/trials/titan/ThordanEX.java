@@ -45,7 +45,7 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> heavensflame = ModifiableCallout.durationBasedCall("Heavensflame", "Spread");
     private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
-    private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
+    private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dodge Dash");
     private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Knockback");
     private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Drop Ice out");
     private final ModifiableCallout<AbilityCastStart> knockback = ModifiableCallout.durationBasedCall("Knockback", "Knockback soon");
@@ -299,7 +299,7 @@ public class ThordanEX implements FilteredEventHandler {
 	}
 	
 	@HandleEvents
-	public void HeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
+	public void HandleHeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
 		final ModifiableCallout<HeadMarkerEvent> call;
 		if (event.getTarget().isThePlayer()) {
 			if (event.getMarkerId() == 0xE) {
@@ -314,7 +314,6 @@ public class ThordanEX implements FilteredEventHandler {
 				} else {
 					return;
 				}
-				call = blueBall;
 			} else if (event.getMarkerId() == 0xB) {
 				call = comet;
 			} else if (event.getMarkerId() == 0x10) {
@@ -329,7 +328,7 @@ public class ThordanEX implements FilteredEventHandler {
 	}
 	
 	@HandleEvents
-	public void TetherEvent(EventContext context, TetherEvent event) {
+	public void HandleTetherEvent(EventContext context, TetherEvent event) {
 		final ModifiableCallout<TetherEvent> call;
 		if (event.getTarget().isThePlayer()) {
 			if (event.getId() == 0x5) {
