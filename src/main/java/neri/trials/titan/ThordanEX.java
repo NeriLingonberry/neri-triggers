@@ -258,9 +258,9 @@ public class ThordanEX implements FilteredEventHandler {
 	public void HeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
 		final ModifiableCallout<HeadMarkerEvent> call;
 		if (event.getTarget().isThePlayer()) {
-			if (event.getAbility().getId() == 0xE) {
+			if (event.getMarkerId() == 0xE) {
 				call = blueBall;
-			} else if (event.getAbility().getId() == 0x1D) {
+			} else if (event.getMarkerId() == 0x1D) {
 				call = spread2;
 			} else {
 				return;
