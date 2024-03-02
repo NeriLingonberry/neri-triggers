@@ -103,7 +103,7 @@ public class ThordanEX implements FilteredEventHandler {
 				}
 				break;
 			case 0x148B:
-				if (noSpamShort.check(event)) {
+				if (noSpam.check(event)) {
 					call = dragonsRage;
 				} else {
 					return;
