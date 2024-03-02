@@ -46,9 +46,11 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
     private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
     private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Attack Meteors");
-    private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Spread, Drop Ice, then Knockback");
+    private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Drop Ice out");
+    private final ModifiableCallout<AbilityCastStart> knockback = ModifiableCallout.durationBasedCall("Knockback", "Knockback soon");
 
     private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout<>("Blue Balls", "Go far");
+    private final ModifiableCallout<HeadMarkerEvent> spread2 = new ModifiableCallout<>("Spread 2", "Spread");
 
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
     private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
@@ -166,6 +168,13 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
+			case 0x1499:
+				if (noSpamShort.check(event)) {
+					call = knockback;
+				} else {
+					return;
+				}
+				break;
 			default:
 				return;
 		}
@@ -249,9 +258,15 @@ public class ThordanEX implements FilteredEventHandler {
 	public void HeadMarkerEvent(EventContext context, HeadMarkerEvent event) {
 		final ModifiableCallout<HeadMarkerEvent> call;
 		if (event.getTarget().isThePlayer()) {
-			call = blueBall;
+			if (event.getAbility().getId() == 0xE) {
+				call = blueBall;
+			} else if (event.getAbility().getId() == 0x1D) {
+				call = spread2;
+			} else {
+				return;
+			}
 		} else {
-			return; // Add this return statement
+			return;
 		}
     context.accept(call.getModified(event));
 	}
