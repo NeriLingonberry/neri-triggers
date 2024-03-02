@@ -51,29 +51,15 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> knockback = ModifiableCallout.durationBasedCall("Knockback", "Knockback soon");
     private final ModifiableCallout<AbilityCastStart> growingAoe = ModifiableCallout.durationBasedCall("Heavy Impact", "Dodge growing aoe");
     private final ModifiableCallout<AbilityCastStart> intercept = ModifiableCallout.durationBasedCall("Healer Mark 2", "Intercept Healer Mark");
-
     private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout<>("Blue Balls", "Go far");
     private final ModifiableCallout<HeadMarkerEvent> spread2 = new ModifiableCallout<>("Spread 2", "Spread");
     private final ModifiableCallout<HeadMarkerEvent> comet = new ModifiableCallout<>("Comet", "Comet on YOU");
     private final ModifiableCallout<HeadMarkerEvent> healerHM = new ModifiableCallout<>("Healer Mark", "Healer Mark on YOU");
-	
     private final ModifiableCallout<TetherEvent> tether = new ModifiableCallout<>("Tether", "Tether, Spread");
-
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
     private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
     private final ModifiableCallout<AbilityUsedEvent> ultimateEnd = new ModifiableCallout<>("Ultimate End", "Big raidwide");
-
-	private final ModifiableCallout<AbilityCastStart> landslide = ModifiableCallout.durationBasedCall("Landslide", "Dodge Lines");
-    private final ModifiableCallout<AbilityCastStart> groundAoe = ModifiableCallout.durationBasedCall("Weight of the Land", "Move");
-    private final ModifiableCallout<AbilityUsedEvent> tumult = new ModifiableCallout<>("Tumult", "AoE");
-    private final ModifiableCallout<AbilityCastStart> geocrush = ModifiableCallout.durationBasedCall("Geocrush", "Go to edge");
-    private final ModifiableCallout<AbilityUsedEvent> mountainBuster = new ModifiableCallout<>("Mountain Buster", "Tank Buster");
-    private final ModifiableCallout<AbilityUsedEvent> rockThrow = new ModifiableCallout<>("Rock Throw", "Jail on {event.target}");
-	private final ModifiableCallout<AbilityUsedEvent> earthenFury = new ModifiableCallout<>("Earthen Fury", "Big AoE");
-    private final ModifiableCallout<BuffApplied> heart = new ModifiableCallout<>("Swap to Heart", "Attack Heart");
-    private final ModifiableCallout<BuffRemoved> addsSoon = new ModifiableCallout<>("Adds Warning", "Adds Soon");
     private final ModifiableCallout<TargetabilityUpdate> adds = new ModifiableCallout<>("Adds", "Attack Adds");
-    private final ModifiableCallout<TargetabilityUpdate> bombs = new ModifiableCallout<>("Bomb Boulders", "Dodge Boulders");
 
     @Override
     public boolean enabled(EventContext context) {
@@ -234,42 +220,6 @@ public class ThordanEX implements FilteredEventHandler {
 			case 0x148D:
 				if (noSpam.check(event)) {
 					call = ultimateEnd;
-				} else {
-					return;
-				}
-				break;
-			default:
-				return;
-		}
-		context.accept(call.getModified(event));
-	}
-
-	@HandleEvents
-	public void buffApplied(EventContext context, BuffApplied event) {
-		int id = (int) event.getBuff().getId();
-		final ModifiableCallout<BuffApplied> call;
-		switch (id) {
-			case 0x148:
-				if (noSpam.check(event)) {
-					call = heart;
-				} else {
-					return;
-				}
-				break;
-			default:
-				return;
-		}
-		context.accept(call.getModified(event));
-	}
-
-	@HandleEvents
-	public void buffRemoved(EventContext context, BuffRemoved event) {
-		int id = (int) event.getBuff().getId();
-		final ModifiableCallout<BuffRemoved> call;
-		switch (id) {
-			case 0x148:
-				if (noSpamShort.check(event)) {
-					call = addsSoon;
 				} else {
 					return;
 				}
