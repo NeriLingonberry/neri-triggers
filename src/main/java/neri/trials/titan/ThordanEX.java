@@ -28,6 +28,7 @@ import gg.xp.reevent.events.Event;
 import gg.xp.reevent.events.SystemEvent;
 import gg.xp.xivsupport.models.CombatantType;
 import gg.xp.xivsupport.events.actlines.events.HeadMarkerEvent;
+import gg.xp.xivsupport.events.actlines.events.TetherEvent;
 
 import java.time.Duration;
 
@@ -40,9 +41,9 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> dragonsGaze = ModifiableCallout.durationBasedCall("Dragon's Gaze", "Look away");
     private final ModifiableCallout<AbilityCastStart> lightningStorm = ModifiableCallout.durationBasedCall("Lightning Storm", "Spread");
     private final ModifiableCallout<AbilityCastStart> quaga = ModifiableCallout.durationBasedCall("Ancient Quaga", "Raidwide");
-    private final ModifiableCallout<AbilityCastStart> heavenlyHeel = ModifiableCallout.durationBasedCall("Heavenly Heel", "Tank Hit");
+    private final ModifiableCallout<AbilityCastStart> heavenlyHeel = ModifiableCallout.durationBasedCall("Heavenly Heel", "Tank Hit on {event.target}");
     private final ModifiableCallout<AbilityCastStart> heavensflame = ModifiableCallout.durationBasedCall("Heavensflame", "Spread");
-    private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take closest tower");
+    private final ModifiableCallout<AbilityCastStart> conviction = ModifiableCallout.durationBasedCall("Conviction", "Take tower");
     private final ModifiableCallout<AbilityCastStart> zephirinSpawn = ModifiableCallout.durationBasedCall("Sacred Cross", "Attack Zephirin");
     private final ModifiableCallout<AbilityCastStart> spiralThrust = ModifiableCallout.durationBasedCall("Spiral Thrust", "Dashes");
     private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Knockback");
@@ -55,6 +56,8 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<HeadMarkerEvent> spread2 = new ModifiableCallout<>("Spread 2", "Spread");
     private final ModifiableCallout<HeadMarkerEvent> comet = new ModifiableCallout<>("Comet", "Comet on you");
     private final ModifiableCallout<HeadMarkerEvent> healerHM = new ModifiableCallout<>("Healer Mark", "Healer Mark on YOU");
+	
+    private final ModifiableCallout<TetherEvent> tether = new ModifiableCallout<>("Tether", "Tether, Spread");
 
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
     private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
@@ -168,7 +171,11 @@ public class ThordanEX implements FilteredEventHandler {
 				break;
 			case 0x14AE:
 				if (noSpamShort.check(event)) {
-					call = frostDebuff;
+					if (event.getTarget().isThePlayer()) {
+						call = frostDebuff;
+					} else {
+						return;
+					}
 				} else {
 					return;
 				}
@@ -194,6 +201,13 @@ public class ThordanEX implements FilteredEventHandler {
 					} else {
 						return;
 					}
+				} else {
+					return;
+				}
+				break;
+			case 0x1487:
+				if (noSpamShort.check(event)) {
+					call = heavenlyHeel;
 				} else {
 					return;
 				}
@@ -289,6 +303,31 @@ public class ThordanEX implements FilteredEventHandler {
 				call = comet;
 			} else if (event.getMarkerId() == 0x10) {
 				call = healerHM;
+			} else if (event.getMarkerId() == 0x3E) {
+				if (event.getMarkerOffset() == 38) {
+					if (noSpam.check(event)) {
+						call = healerHM;
+					} else {
+						return;
+					}
+				} else {
+					return;
+				}
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}
+    context.accept(call.getModified(event));
+	}
+	
+	@HandleEvents
+	public void TetherEvent(EventContext context, TetherEvent event) {
+		final ModifiableCallout<TetherEvent> call;
+		if (event.getTarget().isThePlayer()) {
+			if (event.getId() == 0x5) {
+				call = tether;
 			} else {
 				return;
 			}
