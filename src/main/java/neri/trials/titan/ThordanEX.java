@@ -48,9 +48,11 @@ public class ThordanEX implements FilteredEventHandler {
     private final ModifiableCallout<AbilityCastStart> meteors = ModifiableCallout.durationBasedCall("Meteors", "Attack Meteors");
     private final ModifiableCallout<AbilityCastStart> frostDebuff = ModifiableCallout.durationBasedCall("Hiemal Storm", "Drop Ice out");
     private final ModifiableCallout<AbilityCastStart> knockback = ModifiableCallout.durationBasedCall("Knockback", "Knockback soon");
+    private final ModifiableCallout<AbilityCastStart> growingAoe = ModifiableCallout.durationBasedCall("Heavy Impact", "Dodge growing aoe");
 
     private final ModifiableCallout<HeadMarkerEvent> blueBall = new ModifiableCallout<>("Blue Balls", "Go far");
     private final ModifiableCallout<HeadMarkerEvent> spread2 = new ModifiableCallout<>("Spread 2", "Spread");
+    private final ModifiableCallout<HeadMarkerEvent> comet = new ModifiableCallout<>("Comet", "Comet on you");
 
     private final ModifiableCallout<AbilityUsedEvent> attackAdds = new ModifiableCallout<>("Adds Spawn", "Attack Adds");
     private final ModifiableCallout<AbilityUsedEvent> goMid = new ModifiableCallout<>("Middle Reminder", "Go middle");
@@ -175,6 +177,13 @@ public class ThordanEX implements FilteredEventHandler {
 					return;
 				}
 				break;
+			case 0x14A0:
+				if (noSpamShort.check(event)) {
+					call = growingAoe;
+				} else {
+					return;
+				}
+				break;
 			default:
 				return;
 		}
@@ -262,6 +271,8 @@ public class ThordanEX implements FilteredEventHandler {
 				call = blueBall;
 			} else if (event.getMarkerId() == 0x1D) {
 				call = spread2;
+			} else if (event.getMarkerId() == 0xB) {
+				call = comet;
 			} else {
 				return;
 			}
